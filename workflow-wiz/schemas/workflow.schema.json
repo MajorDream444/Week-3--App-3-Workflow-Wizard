@@ -1,1 +1,154 @@
-
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Workflow",
+  "description": "Schema for workflow automation definitions",
+  "type": "object",
+  "required": ["workflow_name", "description", "trigger", "steps", "tools_used"],
+  "properties": {
+    "workflow_name": {
+      "type": "string",
+      "description": "Name of the workflow",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of what the workflow does"
+    },
+    "trigger": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["schedule", "event", "manual"],
+          "description": "How the workflow is triggered"
+        },
+        "config": {
+          "type": "object",
+          "description": "Trigger-specific configuration",
+          "properties": {
+            "schedule": {
+              "type": "string",
+              "description": "Cron expression or human-readable schedule"
+            },
+            "event_source": {
+              "type": "string",
+              "description": "Source of the event"
+            },
+            "event_type": {
+              "type": "string",
+              "description": "Type of event to listen for"
+            }
+          }
+        }
+      }
+    },
+    "steps": {
+      "type": "array",
+      "description": "Ordered list of workflow steps",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/step"
+      }
+    },
+    "tools_used": {
+      "type": "array",
+      "description": "List of tools/integrations used in this workflow",
+      "items": {
+        "type": "string",
+        "enum": ["gmail", "sheets", "notion", "webhook"]
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "version": {
+          "type": "string"
+        },
+        "author": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "step": {
+      "type": "object",
+      "required": ["step_id", "name", "tool", "action"],
+      "properties": {
+        "step_id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Unique step identifier"
+        },
+        "name": {
+          "type": "string",
+          "description": "Step name",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "description": "What this step does"
+        },
+        "tool": {
+          "type": "string",
+          "enum": ["gmail", "sheets", "notion", "webhook"],
+          "description": "Tool/integration to use"
+        },
+        "action": {
+          "type": "string",
+          "description": "Specific action to perform"
+        },
+        "config": {
+          "type": "object",
+          "description": "Action-specific configuration parameters"
+        },
+        "inputs": {
+          "type": "array",
+          "description": "Required inputs for this step",
+          "items": {
+            "type": "string"
+          }
+        },
+        "outputs": {
+          "type": "array",
+          "description": "Outputs produced by this step",
+          "items": {
+            "type": "string"
+          }
+        },
+        "error_handling": {
+          "type": "string",
+          "enum": ["retry", "skip", "fail"],
+          "default": "fail",
+          "description": "How to handle errors in this step"
+        },
+        "retry_config": {
+          "type": "object",
+          "properties": {
+            "max_attempts": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10,
+              "default": 3
+            },
+            "backoff_seconds": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 5
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,1 +1,25 @@
+# Core AI and API dependencies
+anthropic>=0.39.0
+openai>=1.0.0
+langchain>=0.1.0
+langchain-anthropic>=0.1.0
 
+# Web framework
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+pydantic>=2.5.0
+
+# Tool integrations
+google-api-python-client>=2.110.0
+google-auth-httplib2>=0.2.0
+google-auth-oauthlib>=1.2.0
+notion-client>=2.2.0
+requests>=2.31.0
+
+# Environment and configuration
+python-dotenv>=1.0.0
+pyyaml>=6.0.1
+
+# Testing and validation
+pytest>=7.4.0
+pytest-asyncio>=0.21.0

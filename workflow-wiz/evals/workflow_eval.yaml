@@ -1,1 +1,106 @@
+# Workflow Wizard Evaluation Configuration
+# This file defines test cases for evaluating workflow creation quality
 
+evaluation_suite:
+  name: "Workflow Wizard Evaluation Suite"
+  version: "1.0.0"
+  description: "Tests for workflow automation agent"
+
+test_cases:
+  - id: "simple_email"
+    name: "Simple Email Workflow"
+    description: "Test basic email sending workflow"
+    input: "Send me a daily email at 9am with a motivational quote"
+    expected:
+      workflow_name: "Daily Motivational Email"
+      trigger_type: "schedule"
+      tools_used: ["gmail", "webhook"]
+      min_steps: 2
+      max_steps: 4
+      complexity: "simple"
+
+  - id: "sheets_to_email"
+    name: "Sheets to Email Report"
+    description: "Read from Sheets and email summary"
+    input: "Every Monday morning, read my task list from Google Sheets and email me a summary"
+    expected:
+      trigger_type: "schedule"
+      tools_used: ["sheets", "gmail"]
+      min_steps: 2
+      max_steps: 5
+      complexity: "moderate"
+      required_actions: ["read_rows", "send_email"]
+
+  - id: "gmail_to_notion"
+    name: "Gmail to Notion"
+    description: "Save important emails to Notion"
+    input: "When I receive an email with 'important' in the subject, create a page in my Notion inbox"
+    expected:
+      trigger_type: "event"
+      tools_used: ["gmail", "notion"]
+      min_steps: 2
+      max_steps: 4
+      complexity: "moderate"
+
+  - id: "complex_workflow"
+    name: "Complex Multi-Tool Workflow"
+    description: "Multi-step workflow with data transformation"
+    input: "Every Friday, get all emails from this week, summarize them in a Google Sheet, then create a Notion page with the summary and email it to my team"
+    expected:
+      trigger_type: "schedule"
+      tools_used: ["gmail", "sheets", "notion", "gmail"]
+      min_steps: 4
+      max_steps: 8
+      complexity: "complex"
+
+  - id: "webhook_integration"
+    name: "Webhook Integration"
+    description: "Test webhook tool usage"
+    input: "When someone submits my contact form, send their info to my CRM via webhook and email me a notification"
+    expected:
+      trigger_type: "event"
+      tools_used: ["webhook", "gmail"]
+      min_steps: 2
+      max_steps: 4
+      complexity: "moderate"
+
+evaluation_criteria:
+  intent_accuracy:
+    weight: 0.25
+    checks:
+      - goal_extraction
+      - trigger_identification
+      - tool_selection
+      - complexity_assessment
+
+  workflow_quality:
+    weight: 0.35
+    checks:
+      - logical_flow
+      - error_handling
+      - data_flow_correctness
+      - step_efficiency
+
+  validation_effectiveness:
+    weight: 0.20
+    checks:
+      - error_detection
+      - optimization_suggestions
+      - security_considerations
+
+  export_correctness:
+    weight: 0.20
+    checks:
+      - format_validity
+      - completeness
+      - executability
+
+scoring:
+  excellent: 0.9
+  good: 0.75
+  acceptable: 0.6
+  needs_improvement: 0.4
+  poor: 0.2
+
+# How to run evaluations:
+# pytest evals/ -v --eval-config=workflow_eval.yaml
